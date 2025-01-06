@@ -1,29 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: article
+  name: {{ .Release.Name }}
   labels:
-    app: article
+    app: {{ .Chart.Name }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: article
+      app: {{ .Chart.Name }}
   template:
     metadata:
       labels:
-        app: article
+        app: {{ .Chart.Name }}
     spec:
       containers:
-      - name: article
+      - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
-        - containerPort: {{ .Values.service.port }}
-        resources:
-          limits:
-            cpu: {{ .Values.resources.limits.cpu }}
-            memory: {{ .Values.resources.limits.memory }}
-          requests:
-            cpu: {{ .Values.resources.requests.cpu }}
-            memory: {{ .Values.resources.requests.memory }}
+        - name: http
+          containerPort: {{ .Values.service.port }}
+        env:
+        - name: SECRET_KEY
+          value: "{{ .Values.env.SECRET_KEY }}"
+        - name: DEBUG
+          value: "{{ .Values.env.DEBUG }}"
