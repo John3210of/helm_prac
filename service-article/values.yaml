@@ -22,5 +22,5 @@ tolerations: []
 affinity: {}
 
 env:
-  SECRET_KEY: ""
-  DEBUG: ""
+  SECRET_KEY: "test-key"
+  DEBUG: True
