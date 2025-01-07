@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: service-article-app
+  namespace: argocd # ArgoCD가 실행 중인 네임스페이스
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/John3210of/helm_prac.git
+    targetRevision: HEAD
+    path: service-article
+    helm:
+      valuesFiles:
+      - values.yaml
+  destination:
+    server: https://kubernetes.default.svc # 클러스터 API 서버 주소 (기본값)
+    namespace: default # 배포 대상 네임스페이스
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
