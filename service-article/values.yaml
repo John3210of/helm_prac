@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: john3210of/nine-docs-repo
-  tag: 8bd32be
+  tag: a3275a9
   pullPolicy: IfNotPresent
 
 service:
