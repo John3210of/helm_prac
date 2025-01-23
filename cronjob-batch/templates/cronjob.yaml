@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-batch-cronjob
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  schedule: {{ .Values.cronJob.schedule | quote }}
+  successfulJobsHistoryLimit: {{ .Values.cronJob.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.cronJob.failedJobsHistoryLimit }}
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: {{ .Chart.Name }}
+        spec:
+          containers:
+          - name: batch-job
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            command: ["python", "manage.py", "create_mail_batch"]
+            env:
+            - name: SECRET_KEY
+              value: "{{ .Values.env.SECRET_KEY }}"
+            - name: DEBUG
+              value: "{{ .Values.env.DEBUG | quote }}"
+            resources:
+              limits:
+                cpu: {{ .Values.resources.limits.cpu }}
+                memory: {{ .Values.resources.limits.memory }}
+              requests:
+                cpu: {{ .Values.resources.requests.cpu }}
+                memory: {{ .Values.resources.requests.memory }}
+          restartPolicy: Never

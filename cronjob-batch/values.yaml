@@ -1,0 +1,23 @@
+replicaCount: 1
+
+image:
+  repository: john3210of/nine-docs-repo
+  tag: 73408b4
+  pullPolicy: IfNotPresent
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 256Mi
+  requests:
+    cpu: 250m
+    memory: 128Mi
+
+env:
+  SECRET_KEY: "test-key"
+  DEBUG: True
+
+cronJob:
+  schedule: "*/5 * * * *"
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1

@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-batch-job
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-batch
+    spec:
+      containers:
+      - name: batch-job
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command: ["python", "manage.py", "check_mail_batch"]  # 기본 CMD 대신 실행할 명령어
+        env:
+        - name: SECRET_KEY
+          value: "{{ .Values.env.SECRET_KEY }}"
+        - name: DEBUG
+          value: "{{ .Values.env.DEBUG | quote }}"
+        resources:
+          limits:
+            cpu: {{ .Values.resources.limits.cpu }}
+            memory: {{ .Values.resources.limits.memory }}
+          requests:
+            cpu: {{ .Values.resources.requests.cpu }}
+            memory: {{ .Values.resources.requests.memory }}
+      restartPolicy: Never
